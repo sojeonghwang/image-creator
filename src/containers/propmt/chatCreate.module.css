@@ -1,0 +1,41 @@
+.wrap {
+  position: fixed;
+  bottom: 10px;
+  padding: 10px;
+  min-height: 25px;
+  background: #f0f4f9;
+  border-radius: 10px;
+  margin: 0 10px;
+  width: calc(100% - 40px);
+}
+
+.input_wrap {
+  display: flex;
+  flex-direction: row;
+}
+
+.textarea {
+  width: 100%;
+  height: auto;
+  background: #f0f4f9;
+  max-height: 80px;
+  border: none;
+}
+
+.send_button {
+  border-radius: 50%;
+  background: #bbcde3;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border: none;
+  padding: 0;
+  flex-basis: 30px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.send_icon {
+  vertical-align: middle;
+}
