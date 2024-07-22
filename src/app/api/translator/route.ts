@@ -1,21 +1,19 @@
-import { NextResponse } from "next/server";
-
 export async function POST(req: Request) {
   const body = await req.json();
   const { prompt } = body;
   const res = await fetch(
-    "https://api.kakaobrain.com/v2/inference/karlo/t2i?version=2.0",
+    "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation",
     {
       method: "POST",
       headers: {
-        Authorization: `KakaoAK ${process.env.IMAGE_CREATOR_KEY}`,
+        "X-NCP-APIGW-API-KEY-ID": `${process.env.TRANSLATOR_KEY_ID}`,
+        "X-NCP-APIGW-API-KEY": `${process.env.TRANSLATOR_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        version: "v2.1",
-        prompt,
-        height: 1024,
-        width: 1024,
+        source: "ko",
+        target: "en",
+        text: prompt,
       }),
     }
   );

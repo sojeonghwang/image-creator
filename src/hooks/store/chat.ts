@@ -17,7 +17,6 @@ interface ChatAction {
 const chatStroe = create<ChatState & ChatAction>((set) => ({
   message: [],
   addChat: (message: CreatedImageInterface) => {
-    // @todo any 고치기
     set((state: ChatState) => {
       const newMessage = state.message?.concat(message);
       return {

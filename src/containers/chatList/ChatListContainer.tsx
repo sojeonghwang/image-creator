@@ -8,12 +8,16 @@ function ChatListContainer() {
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const { message } = chatStroe();
 
+  const handleScrollDown = () => {
+    messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const ChatList = useMemo(() => {
     if (message?.length === 0) {
       return <>이미지를 생성해보세요.</>;
     }
 
-    return message?.map((messageItem) => {
+    return message?.map((messageItem, index) => {
       // image
       if (!!messageItem?.image) {
         return (
@@ -22,7 +26,13 @@ function ChatListContainer() {
             marign="0 0 10px 0"
             key={`message_${messageItem.id}`}
           >
-            <img className={styled.image_wrap} src={messageItem.image} />
+            <img
+              onLoad={
+                message.length - 1 === index ? handleScrollDown : () => {}
+              }
+              className={styled.image_wrap}
+              src={messageItem.image}
+            />
           </RoundBox>
         );
       }
@@ -40,7 +50,9 @@ function ChatListContainer() {
   }, [message]);
 
   useEffect(() => {
-    messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
+    if (!message?.[message?.length - 1]?.image) {
+      handleScrollDown();
+    }
   }, [message]);
 
   return (
