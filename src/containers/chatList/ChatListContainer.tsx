@@ -2,11 +2,11 @@
 import RoundBox from "@/components/box/RoundBox";
 import styled from "./chatList.module.css";
 import chatStroe from "@/hooks/store/chat";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 function ChatListContainer() {
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const { message } = chatStroe();
-  console.log("?message", message);
 
   const ChatList = useMemo(() => {
     if (message?.length === 0) {
@@ -19,9 +19,10 @@ function ChatListContainer() {
         return (
           <RoundBox
             bgColor="rgb(187 205 227)"
+            marign="0 0 10px 0"
             key={`message_${messageItem.id}`}
           >
-            <img src="https://fastly.picsum.photos/id/75/200/300.jpg?hmac=sjSIzdmDj0dZefwBIN61pwl3azxymhEGh9owb8ZEgxg" />
+            <img className={styled.image_wrap} src={messageItem.image} />
           </RoundBox>
         );
       }
@@ -38,9 +39,14 @@ function ChatListContainer() {
     });
   }, [message]);
 
+  useEffect(() => {
+    messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [message]);
+
   return (
     <div className={styled.wrap}>
       <div className={styled.inner}>{ChatList}</div>
+      <div ref={messagesEndRef}></div>
     </div>
   );
 }

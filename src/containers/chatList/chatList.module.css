@@ -11,3 +11,7 @@
 .inner {
   padding: 20px;
 }
+
+.image_wrap {
+  max-width: 250px;
+}
