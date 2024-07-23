@@ -1,3 +1,5 @@
+export const maxDuration = 30;
+
 // @description 기능만 만들어두고 쓰지 않을 예정(제대로 피드백을 반영하지 못함 ㅠㅠ)
 export async function POST(req: Request) {
   const body = await req.json();
