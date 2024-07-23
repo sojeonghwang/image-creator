@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/image-changer.ts": {
+      "maxDuration": 30
+    },
+    "api/image-creator.ts": {
+      "maxDuration": 30
+    },
+    "api/image-editor.ts": {
+      "maxDuration": 30
+    }
+  }
+}
