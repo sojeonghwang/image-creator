@@ -3,12 +3,14 @@ import RoundBox from "@/components/box/RoundBox";
 import styled from "./chatList.module.css";
 import { IoCloudDownloadOutline } from "react-icons/io5";
 import chatStroe from "@/hooks/store/chat";
+import alertStore from "@/hooks/store/alert";
 import { useEffect, useMemo, useRef } from "react";
 
 // @todo 다운로드 기능 추가하기
 function ChatListContainer() {
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const { message } = chatStroe();
+  const { setToastMessage } = alertStore();
 
   const handleScrollDown = () => {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -26,19 +28,24 @@ function ChatListContainer() {
       return;
     }
 
-    const res = await fetch("/api/image-changer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        imageSrc,
-      }),
-    });
+    try {
+      const res = await fetch("/api/image-changer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageSrc,
+        }),
+      });
 
-    const { data } = await res.json();
+      const { data } = await res.json();
 
-    handleDownloadImage(data);
+      handleDownloadImage(data);
+    } catch (exception) {
+      setToastMessage("에러가 발생했습니다.");
+      console.error(`[handleChangeImageToBase64] - ${exception}`);
+    }
   };
 
   const ChatList = useMemo(() => {

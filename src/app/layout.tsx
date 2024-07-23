@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Title from "@/components/Title";
+import Toast from "@/containers/alert/Toast";
 import sytled from "./page.module.css";
 import SWRConfigContext from "@/context/SWRConfigContext";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
             <Title />
             <div className={sytled.content}>{children}</div>
           </>
+          <Toast />
         </SWRConfigContext>
       </body>
     </html>

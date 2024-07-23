@@ -1,7 +1,8 @@
 "use client";
 import styled from "./chatCreate.module.css";
 import { IoIosSend } from "react-icons/io";
-import chatStroe from "@/hooks/store/chat";
+import chatStore from "@/hooks/store/chat";
+import alertStore from "@/hooks/store/alert";
 import { useState } from "react";
 import Loading from "@/components/common/Loading";
 
@@ -9,7 +10,8 @@ import Loading from "@/components/common/Loading";
 function ChatListContainer() {
   const [enteredPrompt, setEnteredPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { addChat, selectedMessage } = chatStroe();
+  const { addChat, selectedMessage } = chatStore();
+  const { setToastMessage } = alertStore();
 
   const handleUpdateInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = (event.target as HTMLTextAreaElement).value;
@@ -64,8 +66,8 @@ function ChatListContainer() {
         });
       }
     } catch (exception) {
-      // @todo 에러 처리
-      console.log("?exception", exception);
+      setToastMessage("에러가 발생했습니다.");
+      console.error(`[handleUpdateImage] - ${exception}`);
     } finally {
       setIsLoading(false);
     }
@@ -103,16 +105,16 @@ function ChatListContainer() {
       if (!!data?.message?.result?.translatedText) {
         const { translatedText = undefined } = data?.message?.result;
         if (!translatedText) {
-          console.error("번역에 실패했습니다.");
+          setToastMessage("번역에 실패했습니다.");
           return;
         }
 
         handleCreateImage(translatedText);
       }
     } catch (exception) {
-      // @todo 에러 처리
       setIsLoading(false);
-      // console.log("?exception", exception);
+      setToastMessage("에러가 발생했습니다.");
+      console.error(`[handleTranslate] - ${exception}`);
     }
   };
 
@@ -145,8 +147,8 @@ function ChatListContainer() {
         });
       }
     } catch (exception) {
-      // @todo 에러 처리
-      // console.log("?exception", exception);
+      setToastMessage("에러가 발생했습니다.");
+      console.error(`[handleCreateImage] - ${exception}`);
     } finally {
       setIsLoading(false);
     }
