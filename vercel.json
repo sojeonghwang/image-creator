@@ -1,12 +1,6 @@
 {
   "functions": {
-    "api/image-changer/route.ts": {
-      "maxDuration": 30
-    },
-    "api/image-creator/route.ts": {
-      "maxDuration": 30
-    },
-    "api/image-editor/route.ts": {
+    "app/api/**/*": {
       "maxDuration": 30
     }
   }
