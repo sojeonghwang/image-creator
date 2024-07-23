@@ -1,9 +1,11 @@
 "use client";
 import RoundBox from "@/components/box/RoundBox";
 import styled from "./chatList.module.css";
+import { IoCloudDownloadOutline } from "react-icons/io5";
 import chatStroe from "@/hooks/store/chat";
 import { useEffect, useMemo, useRef } from "react";
 
+// @todo 다운로드 기능 추가하기
 function ChatListContainer() {
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const { message } = chatStroe();
@@ -12,14 +14,42 @@ function ChatListContainer() {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleDownloadImage = (data: string) => {
+    const link = document.createElement("a");
+    link.download = "download.webp";
+    link.href = `data:image/png;base64,${data}`;
+    link.click();
+  };
+
+  const handleChangeImageToBase64 = async (imageSrc: string) => {
+    if (!imageSrc) {
+      return;
+    }
+
+    const res = await fetch("/api/image-changer", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        imageSrc,
+      }),
+    });
+
+    const { data } = await res.json();
+
+    handleDownloadImage(data);
+  };
+
   const ChatList = useMemo(() => {
     if (message?.length === 0) {
       return <>이미지를 생성해보세요.</>;
     }
 
     return message?.map((messageItem, index) => {
-      // image
       if (!!messageItem?.image) {
+        const isLastImage = message.length - 1 === index;
+
         return (
           <RoundBox
             bgColor="rgb(187 205 227)"
@@ -27,12 +57,19 @@ function ChatListContainer() {
             key={`message_${messageItem.id}`}
           >
             <img
-              onLoad={
-                message.length - 1 === index ? handleScrollDown : () => {}
-              }
+              id={`image_${messageItem.id}`}
+              onLoad={isLastImage ? handleScrollDown : () => {}}
               className={styled.image_wrap}
               src={messageItem.image}
             />
+            <button
+              className={styled.download_button}
+              onClick={() =>
+                handleChangeImageToBase64(messageItem?.image ?? "")
+              }
+            >
+              <IoCloudDownloadOutline stroke="#fff" size={25} />
+            </button>
           </RoundBox>
         );
       }

@@ -1,8 +1,9 @@
+// @description 기능만 만들어두고 쓰지 않을 예정(제대로 피드백을 반영하지 못함 ㅠㅠ)
 export async function POST(req: Request) {
   const body = await req.json();
-  const { prompt } = body;
+  const { prompt, image } = body;
   const res = await fetch(
-    "https://api.kakaobrain.com/v2/inference/karlo/t2i?version=2.0",
+    "https://api.kakaobrain.com/v2/inference/karlo/variations",
     {
       method: "POST",
       headers: {
@@ -12,8 +13,10 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         version: "v2.1",
         prompt,
+        image,
         height: 1024,
         width: 1024,
+        return_type: "base64_string",
       }),
     }
   );

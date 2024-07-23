@@ -14,6 +14,7 @@ export async function POST(req: Request) {
         source: "ko",
         target: "en",
         text: prompt,
+        image_format: "png",
       }),
     }
   );
@@ -21,5 +22,4 @@ export async function POST(req: Request) {
   const result = await res.json();
 
   return Response.json({ data: result });
-  // return Response.json({ data: "result" });
 }
