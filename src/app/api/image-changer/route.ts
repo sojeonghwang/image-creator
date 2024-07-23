@@ -1,3 +1,4 @@
+import { Buffer } from "node:buffer";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
@@ -5,9 +6,7 @@ export async function POST(req: Request) {
   const { imageSrc } = body;
 
   const response = await fetch(imageSrc, {});
-  // @todo any 해결하기
   const data = (await response.arrayBuffer()) as any;
   const buffer = Buffer.from(data, "binary").toString("base64");
-
   return Response.json({ data: buffer });
 }

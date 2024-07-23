@@ -6,7 +6,6 @@ import alertStore from "@/hooks/store/alert";
 import { useState } from "react";
 import Loading from "@/components/common/Loading";
 
-// @todo swr 연동: https://velog.io/@sinclairr/next-swr-1
 function ChatListContainer() {
   const [enteredPrompt, setEnteredPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);

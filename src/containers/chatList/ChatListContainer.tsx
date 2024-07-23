@@ -6,7 +6,6 @@ import chatStroe from "@/hooks/store/chat";
 import alertStore from "@/hooks/store/alert";
 import { useEffect, useMemo, useRef } from "react";
 
-// @todo 다운로드 기능 추가하기
 function ChatListContainer() {
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const { message } = chatStroe();
