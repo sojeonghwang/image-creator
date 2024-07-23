@@ -20,6 +20,7 @@
   background: #f0f4f9;
   max-height: 80px;
   border: none;
+  outline: none;
 }
 
 .send_button {
