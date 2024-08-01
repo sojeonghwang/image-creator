@@ -5,11 +5,13 @@ import { IoCloudDownloadOutline } from "react-icons/io5";
 import chatStroe from "@/hooks/store/chat";
 import alertStore from "@/hooks/store/alert";
 import { useEffect, useMemo, useRef } from "react";
+import useApiRequest from "@/hooks/useApiRequest";
 
 function ChatListContainer() {
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const { message } = chatStroe();
   const { setToastMessage } = alertStore();
+  const { sendRequest, loading } = useApiRequest<string>();
 
   const handleScrollDown = () => {
     messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -28,25 +30,22 @@ function ChatListContainer() {
     }
 
     try {
-      const res = await fetch("/api/image-changer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await sendRequest(
+        "/api/image-changer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-        body: JSON.stringify({
-          imageSrc,
-        }),
-      });
+        { imageSrc }
+      );
 
-      if (!res.ok) {
-        const { message } = await res.json();
-        setToastMessage(message ?? "에러가 발생했습니다.");
-        return;
+      if (res.isSuccess && res.data) {
+        handleDownloadImage(res.data);
+      } else {
+        setToastMessage(res.errorMessage ?? "에러가 발생했습니다.");
       }
-
-      const { data } = await res.json();
-
-      handleDownloadImage(data);
     } catch (exception) {
       setToastMessage("에러가 발생했습니다.");
       console.error(`[handleChangeImageToBase64] - ${exception}`);
