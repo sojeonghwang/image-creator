@@ -38,6 +38,12 @@ function ChatListContainer() {
         }),
       });
 
+      if (!res.ok) {
+        const { message } = await res.json();
+        setToastMessage(message ?? "에러가 발생했습니다.");
+        return;
+      }
+
       const { data } = await res.json();
 
       handleDownloadImage(data);
