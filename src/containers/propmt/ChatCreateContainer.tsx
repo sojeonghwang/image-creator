@@ -89,6 +89,7 @@ function ChatListContainer() {
       }
 
       setIsLoading(true);
+
       const res = await fetch("/api/translator", {
         method: "POST",
         headers: {
@@ -98,6 +99,12 @@ function ChatListContainer() {
           prompt: enteredPrompt,
         }),
       });
+
+      if (!res.ok) {
+        const { message } = await res.json();
+        setToastMessage(message ?? "에러가 발생했습니다.");
+        return;
+      }
 
       const { data } = await res.json();
 

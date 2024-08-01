@@ -1,8 +1,20 @@
+import { ERROR_MESSAGE } from "../constants/message";
+
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { prompt } = body;
+  const { prompt = undefined } = body;
+
+  if (!prompt || prompt?.length === 0) {
+    return Response.json(
+      { data: null, message: ERROR_MESSAGE.INVALID_INPUT },
+      {
+        status: 400,
+      }
+    );
+  }
+
   const res = await fetch(
     "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation",
     {
