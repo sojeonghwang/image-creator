@@ -1,6 +1,8 @@
 "use client";
 import styled from "./chatCreate.module.css";
 import { IoIosSend } from "react-icons/io";
+import { FaMicrophoneAlt } from "react-icons/fa";
+import { RiStopCircleFill } from "react-icons/ri";
 import chatStore from "@/hooks/store/chat";
 import alertStore from "@/hooks/store/alert";
 import { useEffect, useRef, useState } from "react";
@@ -192,7 +194,13 @@ function ChatListContainer() {
             placeholder="명령어를 입력해주세요."
             value={enteredPrompt}
           ></textarea>
-          <button onClick={handleRecordUserMic}>TEST 버튼</button>
+          <button onClick={handleRecordUserMic}>
+            TEST 버튼
+            {/* 
+            @todo 다음 PR에서 버튼과 맵핑 시작
+            <FaMicrophoneAlt size={20} />
+            <RiStopCircleFill size={20} /> */}
+          </button>
           <button onClick={handleTranslate} className={styled.send_button}>
             <IoIosSend className={styled.send_icon} size={20} />
           </button>
