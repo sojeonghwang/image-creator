@@ -35,7 +35,7 @@ function ChatListContainer() {
       }[];
     }>();
 
-  const { addChat, selectedMessage } = chatStore();
+  const { addChat } = chatStore();
   const { setToastMessage } = alertStore();
 
   const handleUpdateInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -161,6 +161,11 @@ function ChatListContainer() {
       stream.current.getTracks().forEach((track) => {
         track.stop();
       });
+    }
+
+    if (!event.data) {
+      setToastMessage("오디오 녹음 정보를 받아 오지 못했습니다.");
+      return;
     }
     // 확인용
     const audioFile = URL.createObjectURL(event.data);
