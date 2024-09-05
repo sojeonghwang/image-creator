@@ -8,6 +8,7 @@ import alertStore from "@/hooks/store/alert";
 import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/common/Loading";
 import useApiRequest from "@/hooks/useApiRequest";
+import InitButton from "@/components/common/InitButton";
 
 const requestDefaultOption = {
   method: "POST",
@@ -167,9 +168,22 @@ function ChatListContainer() {
       setToastMessage("오디오 녹음 정보를 받아 오지 못했습니다.");
       return;
     }
-    // 확인용
+    // 확인용 -> 여기서 video  player 에서 처리 한거 여기 따 붙이기
     const audioFile = URL.createObjectURL(event.data);
     const temp2 = new Audio(audioFile);
+
+    // public blobToFile = (theBlob: Blob, fileName:string): File => {
+
+    // const toFile = new File(
+    //   [event.data as any], // cast as any
+    //   "test.mp3",
+    //   {
+    //     lastModified: new Date().getTime(),
+    //     type: event.data.type,
+    //   }
+    // );
+    //Cast to a File() type
+    // }
 
     temp2.play();
   };
@@ -199,16 +213,16 @@ function ChatListContainer() {
             placeholder="명령어를 입력해주세요."
             value={enteredPrompt}
           ></textarea>
-          <button onClick={handleRecordUserMic}>
-            TEST 버튼
-            {/* 
-            @todo 다음 PR에서 버튼과 맵핑 시작
-            <FaMicrophoneAlt size={20} />
-            <RiStopCircleFill size={20} /> */}
-          </button>
-          <button onClick={handleTranslate} className={styled.send_button}>
+          <InitButton onClick={handleRecordUserMic}>
+            {isRecording ? (
+              <RiStopCircleFill size={20} />
+            ) : (
+              <FaMicrophoneAlt size={20} />
+            )}
+          </InitButton>
+          <InitButton onClick={handleTranslate} className={styled.send_button}>
             <IoIosSend className={styled.send_icon} size={20} />
-          </button>
+          </InitButton>
         </div>
       )}
     </div>
