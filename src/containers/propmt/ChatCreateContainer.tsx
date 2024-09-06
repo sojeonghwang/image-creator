@@ -152,7 +152,7 @@ function ChatListContainer() {
       }
     } catch (exception) {
       setToastMessage("마이크 권한을 허용해주셔야 합니다.");
-      console.log(`[handleRecordUserMic] - ${exception}`);
+      console.error(`[handleRecordUserMic] - ${exception}`);
     }
   };
 
@@ -168,24 +168,38 @@ function ChatListContainer() {
       setToastMessage("오디오 녹음 정보를 받아 오지 못했습니다.");
       return;
     }
-    // 확인용 -> 여기서 video  player 에서 처리 한거 여기 따 붙이기
-    const audioFile = URL.createObjectURL(event.data);
-    const temp2 = new Audio(audioFile);
 
-    // public blobToFile = (theBlob: Blob, fileName:string): File => {
+    handleChangeSoundToText(event.data);
+  };
 
-    // const toFile = new File(
-    //   [event.data as any], // cast as any
-    //   "test.mp3",
-    //   {
-    //     lastModified: new Date().getTime(),
-    //     type: event.data.type,
-    //   }
-    // );
-    //Cast to a File() type
-    // }
+  const handleChangeSoundToText = async (audioData: Blob) => {
+    try {
+      const audioFile = new File([audioData], "test.mp3", {
+        lastModified: new Date().getTime(),
+        type: audioData.type,
+      });
 
-    temp2.play();
+      const form = new FormData();
+      form.append("file", audioFile);
+
+      const res = await fetch("/api/sound-to-text", {
+        method: "POST",
+        body: form,
+      });
+      if (!res.ok) {
+        setToastMessage("STT 생성에 실패했습니다.");
+        return;
+      }
+      const result = await res.json();
+      const text =
+        result.data
+          .map((item: { text: string; id: number }) => item.text)
+          .join(" ") ?? "";
+      setEnteredPrompt(text);
+    } catch (exception) {
+      setToastMessage("에러가 발생했습니다.");
+      console.error(`[handleTranslate] - ${exception}`);
+    }
   };
 
   useEffect(
