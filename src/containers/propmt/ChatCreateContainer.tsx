@@ -8,6 +8,7 @@ import alertStore from "@/hooks/store/alert";
 import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/common/Loading";
 import useApiRequest from "@/hooks/useApiRequest";
+import ResetButton from "@/components/common/ResetButton";
 
 const requestDefaultOption = {
   method: "POST",
@@ -151,7 +152,7 @@ function ChatListContainer() {
       }
     } catch (exception) {
       setToastMessage("마이크 권한을 허용해주셔야 합니다.");
-      console.log(`[handleRecordUserMic] - ${exception}`);
+      console.error(`[handleRecordUserMic] - ${exception}`);
     }
   };
 
@@ -167,11 +168,33 @@ function ChatListContainer() {
       setToastMessage("오디오 녹음 정보를 받아 오지 못했습니다.");
       return;
     }
-    // 확인용
-    const audioFile = URL.createObjectURL(event.data);
-    const temp2 = new Audio(audioFile);
 
-    temp2.play();
+    handleChangeSoundToText(event.data);
+  };
+
+  const handleChangeSoundToText = async (audioData: Blob) => {
+    try {
+      const form = new FormData();
+      form.append("file", audioData);
+
+      const res = await fetch("/api/sound-to-text", {
+        method: "POST",
+        body: form,
+      });
+      if (!res.ok) {
+        setToastMessage("STT 생성에 실패했습니다.");
+        return;
+      }
+      const result = await res.json();
+      const text =
+        result.data
+          .map((item: { text: string; id: number }) => item.text)
+          .join(" ") ?? "";
+      setEnteredPrompt(text);
+    } catch (exception) {
+      setToastMessage("에러가 발생했습니다.");
+      console.error(`[handleTranslate] - ${exception}`);
+    }
   };
 
   useEffect(
@@ -199,16 +222,16 @@ function ChatListContainer() {
             placeholder="명령어를 입력해주세요."
             value={enteredPrompt}
           ></textarea>
-          <button onClick={handleRecordUserMic}>
-            TEST 버튼
-            {/* 
-            @todo 다음 PR에서 버튼과 맵핑 시작
-            <FaMicrophoneAlt size={20} />
-            <RiStopCircleFill size={20} /> */}
-          </button>
-          <button onClick={handleTranslate} className={styled.send_button}>
+          <ResetButton onClick={handleRecordUserMic}>
+            {isRecording ? (
+              <RiStopCircleFill size={20} />
+            ) : (
+              <FaMicrophoneAlt size={20} />
+            )}
+          </ResetButton>
+          <ResetButton onClick={handleTranslate} className={styled.send_button}>
             <IoIosSend className={styled.send_icon} size={20} />
-          </button>
+          </ResetButton>
         </div>
       )}
     </div>
