@@ -8,7 +8,7 @@ import alertStore from "@/hooks/store/alert";
 import { useEffect, useRef, useState } from "react";
 import Loading from "@/components/common/Loading";
 import useApiRequest from "@/hooks/useApiRequest";
-import InitButton from "@/components/common/InitButton";
+import ResetButton from "@/components/common/ResetButton";
 
 const requestDefaultOption = {
   method: "POST",
@@ -174,13 +174,8 @@ function ChatListContainer() {
 
   const handleChangeSoundToText = async (audioData: Blob) => {
     try {
-      const audioFile = new File([audioData], "test.mp3", {
-        lastModified: new Date().getTime(),
-        type: audioData.type,
-      });
-
       const form = new FormData();
-      form.append("file", audioFile);
+      form.append("file", audioData);
 
       const res = await fetch("/api/sound-to-text", {
         method: "POST",
@@ -227,16 +222,16 @@ function ChatListContainer() {
             placeholder="명령어를 입력해주세요."
             value={enteredPrompt}
           ></textarea>
-          <InitButton onClick={handleRecordUserMic}>
+          <ResetButton onClick={handleRecordUserMic}>
             {isRecording ? (
               <RiStopCircleFill size={20} />
             ) : (
               <FaMicrophoneAlt size={20} />
             )}
-          </InitButton>
-          <InitButton onClick={handleTranslate} className={styled.send_button}>
+          </ResetButton>
+          <ResetButton onClick={handleTranslate} className={styled.send_button}>
             <IoIosSend className={styled.send_icon} size={20} />
-          </InitButton>
+          </ResetButton>
         </div>
       )}
     </div>
